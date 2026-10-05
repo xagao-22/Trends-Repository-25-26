@@ -1,0 +1,17 @@
+{% extends 'tracker/base.html' %}
+{% block title %}Dashboard | EQUI-Track{% endblock %}
+{% block content %}
+<header class="page-heading dashboard-heading">
+  <div><div class="eyebrow">{% now "l, F j, Y" %}</div><h1>{% if user.is_staff %}Dashboard overview{% else %}Your equipment desk{% endif %}</h1><p>{% if user.is_staff %}A clear view of your school's equipment and lending activity.{% else %}Your borrowing activity and the equipment ready to go.{% endif %}</p></div>
+  <a class="button button-primary" href="{% url 'borrow_create' %}"><span aria-hidden="true">＋</span> New borrow</a>
+</header>
+<section class="stat-grid" aria-label="Key statistics">
+  {% for label, value, icon, tone in stats %}<article class="stat-card tone-{{ tone }}"><div class="stat-top"><span>{{ label }}</span><span class="stat-icon">{% if icon == 'people' %}♙{% elif icon == 'boxes' %}▦{% elif icon == 'activity' %}↗{% elif icon == 'clock' %}◷{% else %}✓{% endif %}</span></div><div class="stat-value">{{ value }}</div><div class="stat-foot">{% if tone == 'red' and value %}Needs attention{% elif tone == 'amber' and value %}Currently checked out{% else %}Updated just now{% endif %}</div></article>{% endfor %}
+</section>
+<section class="panel recent-panel">
+  <div class="panel-heading"><div><div class="eyebrow">THE LATEST</div><h2>Recent transactions</h2></div><a class="text-link" href="{% url 'borrow_records' %}">View all <span aria-hidden="true">→</span></a></div>
+  {% if recent %}<div class="table-wrap"><table><thead><tr><th>Student</th><th>Equipment</th><th>Qty</th><th>Due date</th><th>Status</th></tr></thead><tbody>{% for record in recent %}<tr><td><span class="table-primary">{{ record.student.student_id }} · {{ record.student.first_name }} {{ record.student.last_name }}</span></td><td>{{ record.equipment.name }}</td><td>{{ record.quantity|stringformat:"02d" }}</td><td>{{ record.due_date|date:"M j, Y" }}</td><td><span class="status-pill {% if record.is_overdue %}status-overdue{% else %}status-{{ record.status }}{% endif %}">{% if record.is_overdue %}Overdue{% else %}{{ record.get_status_display }}{% endif %}</span></td></tr>{% endfor %}</tbody></table></div>
+  {% else %}<div class="empty-state"><span class="empty-icon">↔</span><h3>No transactions yet</h3><p>Borrowing activity will show up here as soon as a checkout is recorded.</p><a class="button button-secondary" href="{% url 'borrow_create' %}">Record a borrow</a></div>{% endif %}
+</section>
+<section class="dashboard-bottom"><div class="callout"><div class="callout-mark">✳</div><div><div class="eyebrow">KEEP THINGS MOVING</div><h2>Ready for the next game?</h2><p>Check what's available and get equipment into the right hands.</p></div><a href="{% url 'equipment' %}" class="button button-outline">Browse equipment <span aria-hidden="true">→</span></a></div></section>
+{% endblock %}

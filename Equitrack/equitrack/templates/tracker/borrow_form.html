@@ -1,0 +1,6 @@
+{% extends 'tracker/base.html' %}
+{% block title %}New borrow | EQUI-Track{% endblock %}
+{% block content %}
+<header class="page-heading"><div><div class="eyebrow">EQUIPMENT CHECKOUT</div><h1>Record a borrow</h1><p>Choose the equipment and due date. Inventory updates automatically.</p></div><a class="button button-secondary" href="{% url 'borrow_records' %}">Cancel</a></header>
+<section class="panel form-panel"><form method="post" novalidate>{% csrf_token %}{% include 'tracker/_fields.html' %}<div class="form-note"><span aria-hidden="true">i</span> Available stock is checked again when you submit.</div><div class="form-actions"><button class="button button-primary" type="submit">Confirm checkout</button><a class="button button-quiet" href="{% url 'borrow_records' %}">Cancel</a></div></form></section>
+{% endblock %}

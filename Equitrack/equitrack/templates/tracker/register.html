@@ -1,0 +1,5 @@
+{% extends 'tracker/base.html' %}
+{% block title %}Create account | EQUI-Track{% endblock %}
+{% block auth_content %}
+<section class="auth-card auth-card-wide"><div class="eyebrow">STUDENT REGISTRATION</div><h1>Join your school</h1><p class="auth-intro">Set up your student profile to browse and borrow equipment.</p><form method="post" novalidate>{% csrf_token %}<div class="registration-grid">{% include 'tracker/_fields.html' %}</div><button class="button button-primary button-wide" type="submit">Create account <span aria-hidden="true">→</span></button></form><div class="auth-switch">Already registered? <a href="{% url 'login' %}">Sign in</a></div></section>
+{% endblock %}

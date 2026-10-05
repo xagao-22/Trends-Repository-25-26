@@ -1,0 +1,6 @@
+{% extends 'tracker/base.html' %}
+{% block title %}{{ title }} | EQUI-Track{% endblock %}
+{% block content %}
+<header class="page-heading"><div><div class="eyebrow">DIRECTORY MANAGEMENT</div><h1>{{ title }}</h1><p>Keep school records accurate and ready when the next checkout comes around.</p></div><a class="button button-secondary" href="{% url back_url %}">Cancel</a></header>
+<section class="panel form-panel"><form method="post" novalidate>{% csrf_token %}{% include 'tracker/_fields.html' %}<div class="form-actions"><button class="button button-primary" type="submit">Save changes</button><a class="button button-quiet" href="{% url back_url %}">Cancel</a></div></form></section>
+{% endblock %}

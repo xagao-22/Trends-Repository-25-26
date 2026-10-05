@@ -1,0 +1,1 @@
+"""EQUI-Track Django project package."""

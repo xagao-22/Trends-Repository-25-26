@@ -1,0 +1,48 @@
+{% load static %}
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101217">
+  <title>{% block title %}EQUI-Track{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'tracker/styles.css' %}">
+</head>
+<body>
+{% if user.is_authenticated %}
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="brand" href="{% url 'dashboard' %}"><span class="brand-mark">E</span><span>EQUI<span class="brand-light">-Track</span></span></a>
+    <div class="side-caption">WORKSPACE</div>
+    <nav class="side-nav" aria-label="Main navigation">
+      <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}"><span class="nav-icon">⌂</span>Dashboard</a>
+      {% if user.is_staff %}<a class="nav-link {% if request.resolver_match.url_name == 'students' or request.resolver_match.url_name == 'student_create' or request.resolver_match.url_name == 'student_update' %}active{% endif %}" href="{% url 'students' %}"><span class="nav-icon">♙</span>Students</a>{% endif %}
+      <a class="nav-link {% if request.resolver_match.url_name == 'equipment' or request.resolver_match.url_name == 'equipment_create' or request.resolver_match.url_name == 'equipment_update' %}active{% endif %}" href="{% url 'equipment' %}"><span class="nav-icon">▦</span>Equipment</a>
+      <a class="nav-link {% if request.resolver_match.url_name == 'borrow_records' or request.resolver_match.url_name == 'borrow_create' %}active{% endif %}" href="{% url 'borrow_records' %}"><span class="nav-icon">↔</span>Borrow records</a>
+    </nav>
+    <div class="sidebar-bottom">
+      {% if user.is_staff %}<a class="nav-link admin-link" href="{% url 'admin:index' %}"><span class="nav-icon">⚙</span>Admin tools</a>{% endif %}
+      <button class="theme-toggle" type="button" data-theme-toggle><span class="nav-icon">◐</span><span data-theme-label>Light mode</span></button>
+      <div class="user-mini"><span class="avatar">{{ user.first_name|default:user.username|slice:":1"|upper }}</span><span class="user-mini-copy"><strong>{{ user.get_full_name|default:user.username }}</strong><small>{% if user.is_staff %}Athletics staff{% else %}Student account{% endif %}</small></span></div>
+      <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="logout-button" type="submit">Sign out <span aria-hidden="true">↗</span></button></form>
+    </div>
+  </aside>
+  <main class="main-content">
+    {% if messages %}<div class="messages" aria-live="polite">{% for message in messages %}<div class="message {{ message.tags }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+    {% block content %}{% endblock %}
+    <footer class="page-footer"><span>EQUI-Track</span><span>School equipment, accounted for.</span></footer>
+  </main>
+</div>
+{% else %}
+<main class="auth-layout">
+  <div class="auth-brand"><a class="brand" href="{% url 'login' %}"><span class="brand-mark">E</span><span>EQUI<span class="brand-light">-Track</span></span></a><span class="auth-brand-note">ATHLETICS EQUIPMENT, IN GOOD HANDS.</span></div>
+  {% if messages %}<div class="messages auth-messages" aria-live="polite">{% for message in messages %}<div class="message {{ message.tags }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+  {% block auth_content %}{% endblock %}
+</main>
+{% endif %}
+<script src="{% static 'tracker/app.js' %}" defer></script>
+</body>
+</html>
